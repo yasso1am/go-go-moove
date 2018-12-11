@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "GoGoMoove",
+    "description": "Get help moving your things",
+    "slug": "go-go-moove",
+    "scheme": "go-go-moove",
+    "privacy": "unlisted",
+    "sdkVersion": "31.0.0",
+    "platforms": [
+      "ios"
+    ],
+    "version": "0.1.0",
+    "facebookAppId": "2005860796381816",
+    "facebookDisplayName": "GoGoMoove",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 3500
+    },
+    "assetBundlePatterns": [
+      "assets/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "app-neonbrand-gogomoove",
+      "buildNumber": "0.1.0"
+    }
+  }
+}
