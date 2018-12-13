@@ -10,6 +10,7 @@ import {
   Text,
   StatusBar,
 } from 'react-native'
+import styles from '../../AppStyles'
 
 import { getProfile } from '../../reducers/user'
 
@@ -33,17 +34,12 @@ class Profile extends React.Component{
     return(
       <Fragment>
         <SafeAreaView style={{flex: 0, backgroundColor: '#FE7C2A'}}>
-          <Text> Profile Page </Text>
+          <Text style={{ color: styles.primary } }> Profile Page </Text>
         </SafeAreaView>
       </Fragment>    
     )
   }
 }
-
-const styles = StyleSheet.create({
-
- 
-})
 
 const mapStateToProps = state => {
   return { user: state.user }

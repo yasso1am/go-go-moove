@@ -2,6 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { View, ActivityIndicator, StatusBar } from 'react-native'
 import { validateTokenAndUser } from '../../reducers/auth'
+import AppStyles from '../../AppStyles'
 
 class CheckUser extends React.Component{
 
@@ -19,7 +20,7 @@ class CheckUser extends React.Component{
   render(){
     return(
       <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <ActivityIndicator size="large" color="#FE7C2A"/>
+        <ActivityIndicator size="large" color={AppStyles.primaryColor} />
         <StatusBar barStyle="default" />
       </View>
     )

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "GoGoMoove",
+    "name": "GoGo Moove",
     "description": "Get help moving your things",
     "slug": "go-go-moove",
     "scheme": "go-go-moove",
@@ -13,11 +13,10 @@
     "facebookAppId": "2005860796381816",
     "facebookDisplayName": "GoGoMoove",
     "orientation": "portrait",
-    "icon": "./assets/icon.png",
+    "icon": "./assets/icons/app-icon.png",
     "splash": {
-      "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "image": "./assets/images/splash-screen.png",
+      "backgroundColor": "#4D80FF"
     },
     "updates": {
       "fallbackToCacheTimeout": 3500
