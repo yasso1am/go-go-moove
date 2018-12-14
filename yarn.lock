@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@appandflow/touchable@^1.2.1":
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/@appandflow/touchable/-/touchable-1.2.2.tgz#134b6353e5ec98c5d6937116aa79dfede20166e1"
+  integrity sha1-E0tjU+XsmMXWk3EWqnnf7eIBZuE=
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.0.0-beta.35":
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0.tgz#06e2ab19bdb535385559aabb5ba59729482800f8"
@@ -4753,10 +4758,10 @@ mkdirp@^0.5.0, mkdirp@^0.5.1:
   dependencies:
     minimist "0.0.8"
 
-moment@^2.22.2:
-  version "2.22.2"
-  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
-  integrity sha1-PCV/mDn8DpP/UxSWMiOeuQeD/2Y=
+moment@^2.23.0:
+  version "2.23.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.23.0.tgz#759ea491ac97d54bac5ad776996e2a58cc1bc225"
+  integrity sha512-3IE39bHVqFbWWaPOMHZF98Q9c3LDKGTmypMiTM2QygGXXElkFWIH7GxfmlwmY2vwa+wmNsoYZmG2iusf1ZjJoA==
 
 morgan@^1.9.0:
   version "1.9.1"
@@ -5425,6 +5430,13 @@ query-string@^6.2.0:
     decode-uri-component "^0.2.0"
     strict-uri-encode "^2.0.0"
 
+quick-picker@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/quick-picker/-/quick-picker-1.2.0.tgz#90a9bdb9d1e319a54fca4dee05ee669e15b56ac6"
+  integrity sha512-INh4LN7+v/SMszFLaj8T+87c7wfx8gSIASuGynj3dUOOOrMWwL+DjKQ+sMSUUJLC7bMcVKlgbGhA5GZ2KsdqCQ==
+  dependencies:
+    "@appandflow/touchable" "^1.2.1"
+
 randomatic@^3.0.0:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-3.1.1.tgz#b776efc59375984e36c537b2f51a1f0aff0da1ed"
@@ -5513,7 +5525,7 @@ react-native-keyboard-aware-scroll-view@^0.7.4:
     prop-types "^15.6.2"
     react-native-iphone-x-helper "^1.0.3"
 
-"react-native-maps@github:expo/react-native-maps#v0.22.1-exp.0":
+react-native-maps@expo/react-native-maps#v0.22.1-exp.0:
   version "0.22.1"
   resolved "https://codeload.github.com/expo/react-native-maps/tar.gz/e6f98ff7272e5d0a7fe974a41f28593af2d77bb2"
 

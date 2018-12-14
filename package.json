@@ -13,11 +13,12 @@
     "preset": "jest-expo"
   },
   "dependencies": {
+    "axios": "^0.18.0",
     "expo": "^31.0.4",
+    "moment": "^2.23.0",
+    "quick-picker": "^1.2.0",
     "react": "16.5.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-31.0.0.tar.gz",
-    "axios": "^0.18.0",
-    "moment": "^2.22.2",
     "react-native-keyboard-aware-scroll-view": "^0.7.4",
     "react-navigation": "^3.0.0",
     "react-redux": "^5.1.0",
