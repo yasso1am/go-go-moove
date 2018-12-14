@@ -41,7 +41,7 @@ class AuthHome extends React.Component {
 
   static navigationOptions = {
     header: null,
-    title: "Account Selection"
+    headerBackTitle: "Login"
   };
 
 
@@ -240,7 +240,7 @@ class AuthHome extends React.Component {
                           alignItems: "center",
                           justifyContent: "center"
                         }}
-                        onPress={() => f => f}
+                        onPress={() => this.props.navigation.navigate('ForgotPassword')}
                       >
                         <Text
                           adjustsFontSizeToFit
