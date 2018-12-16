@@ -30,9 +30,10 @@ export const loginFacebook = (fb_access_token, navigation) => {
   }
 }
 
-export const register = (name, email, password, passwordConfirm, navigation) => {
+export const register = (name, email, password, passwordConfirm, dob, country, stateAbv, city, line1, line2, zip, navigation) => {
+  debugger
   return (dispatch) => {
-    axios.post(`${BASE_URL}/register`, {name: name, username: email, password: password, password_confirmation: passwordConfirm} )
+    axios.post(`${BASE_URL}/register`, {name: name, email: email, password: password, password_confirmation: passwordConfirm, dob: dob, country: country, state: stateAbv, city: city, line_1: line1, line2: line2, zip: zip} )
       .then( async (res) => {
         let user = res.data.user
         let token = res.data.token
@@ -40,7 +41,7 @@ export const register = (name, email, password, passwordConfirm, navigation) => 
           token.expires_on = tenMinutesFromNow
             dispatch({type: TOKEN, token: token})
             dispatch({type: LOGIN, user})
-              navigation.navigate('BuildProfile')
+              navigation.navigate('Profile')
       })
       .catch( error => {
         console.log({error})
@@ -51,7 +52,7 @@ export const register = (name, email, password, passwordConfirm, navigation) => 
 
 export const login = (email, password, navigation) => {
   return (dispatch) => {
-    axios.post(`${BASE_URL}/login`, { username: email, password: password} )
+    axios.post(`${BASE_URL}/login`, { email: email, password: password} )
       .then ( res => {
         let user = res.data.user
         let token = res.data.token
@@ -59,11 +60,7 @@ export const login = (email, password, navigation) => {
           token.expires_on = tenMinutesFromNow
             dispatch({type: TOKEN, token})
             dispatch({type: LOGIN, user})
-          if (!user.avatar){
-            navigation.navigate('BuildProfile')
-          } else {
             navigation.navigate('Profile')
-          }
       })
       .catch( err => {
         console.log({err})
@@ -102,6 +99,7 @@ export const getProfile = () => {
 }
 
 export const logout = (navigation) => {
+  debugger
   return ( dispatch ) => {
     axios.post(`${BASE_URL}/v1/logout`)
     .then( res => {

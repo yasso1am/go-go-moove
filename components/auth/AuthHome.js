@@ -22,7 +22,22 @@ import { facebookAppId } from "../../ENV";
 
 import AppStyles from "../../AppStyles";
 
+import { register, login } from '../../reducers/user'
+
 const { width } = Dimensions.get('window')
+
+const Header = () => (
+  <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}}>
+    <View style={{flexDirection: 'row', flex: 2, alignItems: 'center', justifyContent: 'center'}}>
+      <Text style={{textAlign: "center"}}>Must be 18+ to use this app</Text>
+    </View>
+    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+      <TouchableOpacity onPress={() => QuickPicker.close()} adjustsFontSizeToFit hitSlop={{top: 50, bottom: 50, left: 50, right: 50}}>
+        <Text style={{color: AppStyles.primaryColor, fontWeight: 'bold', fontSize: 16}}> DONE </Text>
+      </TouchableOpacity>
+    </View>
+  </View>
+)
 class AuthHome extends React.Component {
   
   state = {
@@ -35,8 +50,9 @@ class AuthHome extends React.Component {
     country: "United States",
     stateAbv: "",
     city: "",
-    street: "",
-    apt: ""
+    line1: "",
+    line2: "",
+    zip: "",
   }
 
   static navigationOptions = {
@@ -72,9 +88,44 @@ class AuthHome extends React.Component {
   };
 
   handleSubmit = () => {
-    console.log('hitSubmit')
-    console.log(this.state)
+    const {
+      active,
+      name,
+      email,
+      password,
+      passwordConfirm,
+      dob,
+      country,
+      stateAbv,
+      city,
+      line1,
+      line2,
+      zip
+    } = this.state
+    const { dispatch, navigation } = this.props
+    if (active === 'Sign Up'){
+      if (!passwordConfirm || !password || !email || !name || !dob || !stateAbv || !city || !line1 || !zip ){
+        Alert.alert("Please complete all required fields")
+        return
+      } 
+      if ((passwordConfirm && password) && passwordConfirm !== password) {
+        Alert.alert("Passwords must match")
+        return
+      } else {
+        let formattedDate = moment(dob).format('YYYY-MM-DD')
+        dispatch(register(name, email, password, passwordConfirm, formattedDate, country, stateAbv, city, line1, line2, zip, navigation))
+        this.setState({ email: '', password: '', passwordConfirm: '', name: ''})
+        return
+      }
+    } else if (active === 'Login' && (email && password !== '')){
+        dispatch(login(email, password, navigation))
+        this.setState({ password: ''})
+      } else {
+        Alert.alert("Please complete both fields")
+      }
   };
+
+
 
   pickDate = () => {
     const date = typeof this.state.dob === 'string' ? moment()._d : this.state.dob
@@ -82,10 +133,7 @@ class AuthHome extends React.Component {
         pickerType: 'date',
         mode: 'date',
         selectedValue: date,
-        topRow: 
-          <Text adjustsFontSizeToFit numberOfLines={1} textAlignVertical="center" textAlign="left"> 
-            You must be at least 18 to use this app 
-          </Text>,
+        topRow: <Header />,
         onValueChange: (dob) => this.setState({dob}),
         useNativeDriver: true,
         onTapOut: QuickPicker.close()
@@ -145,7 +193,7 @@ class AuthHome extends React.Component {
             </View>
             <View style={styles.formContainer}>
               <KeyboardAwareScrollView
-                contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 30 }}
+                contentContainerStyle={{ flexGrow: 1, paddingHorizontal: 30, paddingBottom: 15 }}
                 scrollEnabled={active === "Login" ? false : true}
                 enableAutomaticScroll={true}
                 pinchGestureEnabled={false}
@@ -292,36 +340,36 @@ class AuthHome extends React.Component {
                     </View>
                   
                     <View style={styles.lineItem}>
-                      <Text style={styles.labelText}> Street </Text>
+                      <Text style={styles.labelText}> Address Line 1 </Text>
                       <TextInput
-                        style={styles.textInput}
+                        style={[styles.textInput, {paddingRight: '30%'}]}
                         ref={input => {
-                          this.street = input;
+                          this.line1 = input;
                         }}
                         autoCapitalize="none"
-                        value={this.state.street}
+                        value={this.state.line1}
                         autoCorrect={false}
                         textContentType={"streetAddressLine1"}
                         returnKeyType={"next"}
                         onSubmitEditing={() => this.city.focus()}
-                        onChangeText={street => this.setState({ street })}
+                        onChangeText={line1 => this.setState({ line1 })}
                         underlineColorAndroid="transparent"
                       />
                     </View>
                     <View style={styles.lineItem}>
-                      <Text style={styles.labelText}> Apt # </Text>
+                      <Text style={styles.labelText}> Address Line 2</Text>
                       <TextInput
-                        style={styles.textInput}
+                        style={[styles.textInput, {paddingRight: '30%'}]}
                         ref={input => {
-                          this.apt = input;
+                          this.line2 = input;
                         }}
                         autoCapitalize="none"
-                        value={this.state.apt}
+                        value={this.state.line2}
                         autoCorrect={false}
-                        textContentType={"none"}
+                        textContentType={"streetAddressLine2"}
                         returnKeyType={"next"}
                         onSubmitEditing={() => this.city.focus()}
-                        onChangeText={apt => this.setState({ apt })}
+                        onChangeText={line2 => this.setState({ line2 })}
                         underlineColorAndroid="transparent"
                       />
                     </View>
@@ -353,8 +401,23 @@ class AuthHome extends React.Component {
                         value={this.state.stateAbv}
                         textContentType={"addressState"}
                         returnKeyType={"next"}
-                        onSubmitEditing={() => f => f}
+                        onSubmitEditing={() => this.zip.focus()}
                         onChangeText={stateAbv => this.setState({ stateAbv })}
+                        underlineColorAndroid="transparent"
+                      />
+                    </View>
+                    <View style={styles.lineItem}>
+                      <Text style={styles.labelText}> Zip Code </Text>
+                      <TextInput
+                        style={styles.textInput}
+                        ref={input => {
+                          this.zip = input;
+                        }}
+                        autoCapitalize="none"
+                        keyboardType="number-pad"
+                        value={this.state.zip}
+                        returnKeyType={"next"}
+                        onChangeText={zip => zip.length > 5 ? f => f : this.setState({ zip })}
                         underlineColorAndroid="transparent"
                       />
                     </View>

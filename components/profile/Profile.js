@@ -10,9 +10,9 @@ import {
   Text,
   StatusBar,
 } from 'react-native'
-import styles from '../../AppStyles'
+import AppStyles from '../../AppStyles'
 
-import { getProfile } from '../../reducers/user'
+import { getProfile, logout } from '../../reducers/user'
 
 
 class Profile extends React.Component{
@@ -24,17 +24,14 @@ class Profile extends React.Component{
     drawerLockMode: 'locked-closed'
   }
 
-  componentDidMount(){
-    const { dispatch } = this.props
-      dispatch(getProfile())
-  }
-
   render(){
 
     return(
       <Fragment>
-        <SafeAreaView style={{flex: 0, backgroundColor: '#FE7C2A'}}>
-          <Text style={{ color: styles.primary } }> Profile Page </Text>
+        <SafeAreaView style={{padding: 30, alignItems: 'center', justifyContent: 'center', flex: 1}}>
+          <TouchableOpacity onPress={ () => this.props.dispatch(logout(this.props.navigation))} style={{padding: 50, borderRadius: 5, borderColor: AppStyles.primaryColor, backgroundColor: AppStyles.primaryColor}}>
+            <Text style={{ color: styles.primary } }> logout </Text>
+          </TouchableOpacity>
         </SafeAreaView>
       </Fragment>    
     )
