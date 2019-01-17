@@ -15,10 +15,13 @@ import {
   Dimensions,
 } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete';
 import { Facebook } from "expo";
 import QuickPicker from 'quick-picker'
 import { loginFacebook } from "../../reducers/user";
-import { facebookAppId } from "../../ENV";
+import { FACEBOOK_APP_ID, GOOGLE_PLACES_API_KEY } from 'react-native-dotenv'
+
+// ApiClient.init(FACEBOOK_APP_ID, GOOGLE_PLACES_API_KEY)
 
 import AppStyles from "../../AppStyles";
 
@@ -216,6 +219,32 @@ class AuthHome extends React.Component {
                     />
                   </View>
                 )}
+
+                {/* <GooglePlacesAutocomplete
+                  ref="endlocation"
+                  placeholder='Where do you want to go?'
+                  minLength={5}
+                  styles={{
+                    container: {backgroundColor: 'white', borderWidth: 0},
+                    textInputContainer: [styles.lineItem, {backgroundColor: 'white', borderWidth: 0}],
+                    textInput: styles.textInput
+                  }}
+                  returnKeyType={'search'} 
+                  listViewDisplayed='auto' 
+                  fetchDetails={true}
+                  onPress={(data, details = null) => {
+                    console.log(data, details)
+                  }}
+                  nearbyPlacesAPI='GooglePlacesSearch'
+                  GooglePlacesSearchQuery={{ rankby: 'distance'}}        
+
+                  query={{
+                    key: GOOGLE_PLACES_API_KEY,
+                    language: 'en', 
+                  }}
+
+                  debounce={200} 
+                /> */}
                 <View style={styles.lineItem}>
                   <Text style={styles.labelText}> Email </Text>
                   <TextInput

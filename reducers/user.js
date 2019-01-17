@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { Alert } from 'react-native'
-import { BASE_URL } from '../ENV.js'
+import { BASE_URL } from 'react-native-dotenv'
+debugger
+// ApiClient.init(BASE_URL)
 
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'

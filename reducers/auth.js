@@ -2,11 +2,12 @@ import axios from 'axios'
 import { Alert } from 'react-native'
 import { store } from '../store'
 import NavigationService from '../NavigationService'
-import { BASE_URL, AUTH_URL } from '../ENV.js'
-import { getProfile } from './user'
+import { BASE_URL, AUTH_URL } from 'react-native-dotenv'
 
 const LOGOUT = 'LOGOUT'
 const TOKEN = 'TOKEN'
+
+// ApiClient.init(BASE_URL, AUTH_URL)
 
 export const validateTokenAndUser = async () => {
 	try {
@@ -18,8 +19,7 @@ export const validateTokenAndUser = async () => {
       store.dispatch({type: TOKEN, token: newToken})
 		    return true
 	} catch (err) {
-      console.log(`Could not get a new token with the refresh_token upon signing into the app, or could not update the user with that token`)
-      console.log({err})
+      console.warn(`Could not get a new token with the refresh_token upon signing into the app, or could not update the user with that token`)
       return false
 	}
 }
@@ -31,7 +31,7 @@ const axiosInstanceCall = async (token) => {
     console.log(`A new refresh token was succesfully retrieved`)
     return res.data.token
   } catch (err) {
-      console.log(`The refresh token must have expired, signing the user out`)
+      console.warn(`The refresh token must have expired, signing the user out`)
       store.dispatch({type: LOGOUT})
       Alert.alert('Session has ended, please sign in again')
       NavigationService.navigate('AuthHome')
@@ -61,7 +61,7 @@ axios.interceptors.request.use( async ( config ) => {
       }
       return config
   } catch (err) {
-
+    debugger
   }
 }, error => Promise.reject(error))
 

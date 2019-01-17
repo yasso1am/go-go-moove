@@ -8,6 +8,7 @@ import NavigationService from './NavigationService'
 import CheckUser from './components/auth/CheckUser'
 import AuthHome from './components/auth/AuthHome'
 import ForgotPassword from './components/auth/ForgotPassword'
+import AddressSearch from './components/utils/AddressSearch'
 
 import Profile from './components/profile/Profile'
 
