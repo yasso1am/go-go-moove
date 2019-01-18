@@ -19,7 +19,7 @@ export const validateTokenAndUser = async () => {
       store.dispatch({type: TOKEN, token: newToken})
 		    return true
 	} catch (err) {
-      console.warn(`Could not get a new token with the refresh_token upon signing into the app, or could not update the user with that token`)
+      console.log(`Could not get a new token with the refresh_token upon signing into the app, or could not update the user with that token`)
       return false
 	}
 }
@@ -31,7 +31,7 @@ const axiosInstanceCall = async (token) => {
     console.log(`A new refresh token was succesfully retrieved`)
     return res.data.token
   } catch (err) {
-      console.warn(`The refresh token must have expired, signing the user out`)
+      console.log(`The refresh token must have expired, signing the user out`)
       store.dispatch({type: LOGOUT})
       Alert.alert('Session has ended, please sign in again')
       NavigationService.navigate('AuthHome')

@@ -21,7 +21,6 @@ import QuickPicker from 'quick-picker'
 import { loginFacebook } from "../../reducers/user";
 import { FACEBOOK_APP_ID, GOOGLE_PLACES_API_KEY } from 'react-native-dotenv'
 
-// ApiClient.init(FACEBOOK_APP_ID, GOOGLE_PLACES_API_KEY)
 
 import AppStyles from "../../AppStyles";
 
@@ -45,17 +44,13 @@ class AuthHome extends React.Component {
   
   state = {
     active: "Login",
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
     passwordConfirm: "",
     dob: 'Date of Birth',
-    country: "United States",
-    stateAbv: "",
-    city: "",
-    line1: "",
-    line2: "",
-    zip: "",
+    address: '',
   }
 
   static navigationOptions = {
@@ -93,21 +88,17 @@ class AuthHome extends React.Component {
   handleSubmit = () => {
     const {
       active,
-      name,
+      firstName,
+      lastName,
       email,
       password,
       passwordConfirm,
       dob,
-      country,
-      stateAbv,
-      city,
-      line1,
-      line2,
-      zip
+      address,
     } = this.state
     const { dispatch, navigation } = this.props
     if (active === 'Sign Up'){
-      if (!passwordConfirm || !password || !email || !name || !dob || !stateAbv || !city || !line1 || !zip ){
+      if (!passwordConfirm || !password || !email || !firstName || !lastName || !dob || address){
         Alert.alert("Please complete all required fields")
         return
       } 
@@ -116,8 +107,8 @@ class AuthHome extends React.Component {
         return
       } else {
         let formattedDate = moment(dob).format('YYYY-MM-DD')
-        dispatch(register(name, email, password, passwordConfirm, formattedDate, country, stateAbv, city, line1, line2, zip, navigation))
-        this.setState({ email: '', password: '', passwordConfirm: '', name: ''})
+        dispatch(register(name, email, password, passwordConfirm, formattedDate, address))
+        this.setState({ email: '', password: '', passwordConfirm: '', name: '', address: ''})
         return
       }
     } else if (active === 'Login' && (email && password !== '')){
@@ -202,49 +193,100 @@ class AuthHome extends React.Component {
                 pinchGestureEnabled={false}
               >
                 {active === "Sign Up" && (
+                  <Fragment>
                   <View style={styles.lineItem}>
-                  <Text style={styles.labelText}> Full Name </Text>
+                  <Text style={styles.labelText}> First Name </Text>
                     <TextInput
                       style={styles.textInput}
                       autoCapitalize="none"
                       autoCorrect={false}
-                      value={this.state.name}
+                      value={this.state.firstName}
                       textContentType={"name"}
                       returnKeyType="next"
                       onSubmitEditing={() => {
                         this.email.focus();
                       }}
-                      onChangeText={name => this.setState({ name })}
+                      onChangeText={firstName => this.setState({ firstName })}
                       underlineColorAndroid="transparent"
                     />
                   </View>
+
+                  <View style={styles.lineItem}>
+                    <Text style={styles.labelText}> Last Name </Text>
+                      <TextInput
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        value={this.state.lastName}
+                        textContentType={"name"}
+                        returnKeyType="next"
+                        onSubmitEditing={() => {
+                          this.email.focus();
+                        }}
+                        onChangeText={lastName => this.setState({ lastName })}
+                        underlineColorAndroid="transparent"
+                      />
+                  </View>
+
+                    <GooglePlacesAutocomplete
+                        styles={{
+                          textInputContainer: {
+                            backgroundColor: 'white', 
+                            borderWidth: 0.5, 
+                            borderColor: '#707070', 
+                            borderRadius: 5,
+                            paddingRight: '15%',
+                            height: 50,
+                            opacity: 1,
+                            marginTop: 15,
+                            zIndex: 1,
+                            borderTopWidth: 1,
+                            borderBottomWidth: 1,
+                          },
+                          textInput: {
+                            zIndex: 0,
+                            fontFamily: 'System',
+                            height: '70%',
+                            paddingVertical: 1,
+                            margin: 0,
+                          },
+                          container: {
+                          },
+                        
+                          }}
+                        minLength={2}
+                        placeholder={null}
+                        returnKeyType={'search'} 
+                        listViewDisplayed={true} 
+                        fetchDetails={true}
+                        onPress={(data, details) => { 
+                          this.setState({address: data.description})
+                        }}
+                        nearbyPlacesAPI='GooglePlacesSearch'
+                        GooglePlacesSearchQuery={{ rankby: 'distance'}}        
+                        debounce={200} 
+                        query={{
+                          key: 'AIzaSyA9tAhBdeDbhjDDcBWKHxTMxYtVPU4df_w',
+                          language: 'en', 
+                        }}
+                      >
+                        <Text style={[styles.labelText, {paddingTop: '10.5%'}]}> Address </Text>
+                      </GooglePlacesAutocomplete>
+
+                    <View style={styles.lineItem}>
+                      <TouchableOpacity 
+                        style={styles.textInput}
+                        onPress={() => this.pickDate()}
+                      >
+                      <Text style={styles.labelText}> Date of Birth </Text>
+                        <Text style={{color: '#6F6F6F'}}> { typeof this.state.dob === 'string' ? '' : moment(this.state.dob).format('MMM Do YYYY') } </Text>
+                      </TouchableOpacity>
+                    </View>
+                    
+                  </Fragment>
                 )}
 
-                {/* <GooglePlacesAutocomplete
-                  ref="endlocation"
-                  placeholder='Where do you want to go?'
-                  minLength={5}
-                  styles={{
-                    container: {backgroundColor: 'white', borderWidth: 0},
-                    textInputContainer: [styles.lineItem, {backgroundColor: 'white', borderWidth: 0}],
-                    textInput: styles.textInput
-                  }}
-                  returnKeyType={'search'} 
-                  listViewDisplayed='auto' 
-                  fetchDetails={true}
-                  onPress={(data, details = null) => {
-                    console.log(data, details)
-                  }}
-                  nearbyPlacesAPI='GooglePlacesSearch'
-                  GooglePlacesSearchQuery={{ rankby: 'distance'}}        
-
-                  query={{
-                    key: GOOGLE_PLACES_API_KEY,
-                    language: 'en', 
-                  }}
-
-                  debounce={200} 
-                /> */}
+        
                 <View style={styles.lineItem}>
                   <Text style={styles.labelText}> Email </Text>
                   <TextInput
@@ -350,7 +392,6 @@ class AuthHome extends React.Component {
                         secureTextEntry={true}
                         value={this.state.passwordConfirm}
                         returnKeyType="next"
-                        // onSubmitEditing={() => this.dob.focus()}
                         onChangeText={passwordConfirm =>
                           this.setState({ passwordConfirm })
                         }
@@ -358,104 +399,6 @@ class AuthHome extends React.Component {
                       />
                     </View>
                     
-                    <View style={styles.lineItem}>
-                      <TouchableOpacity 
-                        style={styles.textInput}
-                        onPress={() => this.pickDate()}
-                      >
-                      <Text style={styles.labelText}> Date of Birth </Text>
-                        <Text style={{color: '#6F6F6F'}}> { typeof this.state.dob === 'string' ? '' : moment(this.state.dob).format('MMM Do YYYY') } </Text>
-                      </TouchableOpacity>
-                    </View>
-                  
-                    <View style={styles.lineItem}>
-                      <Text style={styles.labelText}> Address Line 1 </Text>
-                      <TextInput
-                        style={[styles.textInput, {paddingRight: '30%'}]}
-                        ref={input => {
-                          this.line1 = input;
-                        }}
-                        autoCapitalize="none"
-                        value={this.state.line1}
-                        autoCorrect={false}
-                        textContentType={"streetAddressLine1"}
-                        returnKeyType={"next"}
-                        onSubmitEditing={() => this.city.focus()}
-                        onChangeText={line1 => this.setState({ line1 })}
-                        underlineColorAndroid="transparent"
-                      />
-                    </View>
-                    <View style={styles.lineItem}>
-                      <Text style={styles.labelText}> Address Line 2</Text>
-                      <TextInput
-                        style={[styles.textInput, {paddingRight: '30%'}]}
-                        ref={input => {
-                          this.line2 = input;
-                        }}
-                        autoCapitalize="none"
-                        value={this.state.line2}
-                        autoCorrect={false}
-                        textContentType={"streetAddressLine2"}
-                        returnKeyType={"next"}
-                        onSubmitEditing={() => this.city.focus()}
-                        onChangeText={line2 => this.setState({ line2 })}
-                        underlineColorAndroid="transparent"
-                      />
-                    </View>
-                    <View style={styles.lineItem}>
-                      <Text style={styles.labelText}> City </Text>
-                      <TextInput
-                        style={styles.textInput}
-                        ref={input => {
-                          this.city = input;
-                        }}
-                        autoCapitalize="none"
-                        value={this.state.city}
-                        autoCorrect={false}
-                        textContentType={"addressCity"}
-                        returnKeyType={"next"}
-                        onSubmitEditing={() => this.stateAbv.focus()}
-                        onChangeText={city => this.setState({ city })}
-                        underlineColorAndroid="transparent"
-                      />
-                    </View>
-                    <View style={styles.lineItem}>
-                      <Text style={styles.labelText}> State </Text>
-                      <TextInput
-                        style={styles.textInput}
-                        ref={input => {
-                          this.stateAbv = input;
-                        }}
-                        autoCapitalize="none"
-                        value={this.state.stateAbv}
-                        textContentType={"addressState"}
-                        returnKeyType={"next"}
-                        onSubmitEditing={() => this.zip.focus()}
-                        onChangeText={stateAbv => this.setState({ stateAbv })}
-                        underlineColorAndroid="transparent"
-                      />
-                    </View>
-                    <View style={styles.lineItem}>
-                      <Text style={styles.labelText}> Zip Code </Text>
-                      <TextInput
-                        style={styles.textInput}
-                        ref={input => {
-                          this.zip = input;
-                        }}
-                        autoCapitalize="none"
-                        keyboardType="number-pad"
-                        value={this.state.zip}
-                        returnKeyType={"next"}
-                        onChangeText={zip => zip.length > 5 ? f => f : this.setState({ zip })}
-                        underlineColorAndroid="transparent"
-                      />
-                    </View>
-                    <View style={styles.lineItem}>
-                      <View style={styles.textInput}>
-                        <Text style={{color: '#6F6F6F'}}> United States </Text>
-                        <Text style={styles.labelText}> Country </Text>
-                      </View>
-                    </View>
                   </Fragment>
                 )}
 
@@ -531,6 +474,7 @@ const styles = StyleSheet.create({
     borderColor: "#707070",
     borderWidth: 0.5,
     borderRadius: 5,
+    backgroundColor: 'white',
     zIndex: 0
   },
   labelText: {

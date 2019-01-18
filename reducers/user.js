@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Alert } from 'react-native'
 import { BASE_URL } from 'react-native-dotenv'
-debugger
 // ApiClient.init(BASE_URL)
 
 const LOGIN = 'LOGIN'
@@ -9,7 +8,7 @@ const LOGOUT = 'LOGOUT'
 const TOKEN = 'TOKEN'
 
 
-export const loginFacebook = (fb_access_token, navigation) => {
+export const loginFacebook = (fb_access_token, navigation) => { d
   return (dispatch) => {
     axios.post(`${BASE_URL}/login/facebook`, {access_token: fb_access_token})
     .then( async res => {
