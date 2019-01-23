@@ -10,7 +10,7 @@ class CheckUser extends React.Component{
     const { user } = this.props
     validToken = await validateTokenAndUser()
     if (user && validToken === true){
-      console.log('Token validation and stored user fetching succesful')
+      console.log('Saved user: token validation and user fetching succesful')
       this.props.navigation.navigate('App')
     } else {
         this.props.navigation.navigate('Auth')

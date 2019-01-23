@@ -7,7 +7,6 @@ import { BASE_URL, AUTH_URL } from 'react-native-dotenv'
 const LOGOUT = 'LOGOUT'
 const TOKEN = 'TOKEN'
 
-// ApiClient.init(BASE_URL, AUTH_URL)
 
 export const validateTokenAndUser = async () => {
 	try {
@@ -19,7 +18,7 @@ export const validateTokenAndUser = async () => {
       store.dispatch({type: TOKEN, token: newToken})
 		    return true
 	} catch (err) {
-      console.log(`Could not get a new token with the refresh_token upon signing into the app, or could not update the user with that token`)
+      console.log(`No saved user: ${err.response.data[0]}`)
       return false
 	}
 }
@@ -61,7 +60,7 @@ axios.interceptors.request.use( async ( config ) => {
       }
       return config
   } catch (err) {
-    debugger
+    console.log(err)
   }
 }, error => Promise.reject(error))
 

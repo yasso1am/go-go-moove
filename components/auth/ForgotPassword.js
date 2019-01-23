@@ -100,13 +100,13 @@ class ForgotPassword extends React.Component {
 
 styles = StyleSheet.create({
   headerContainer: {
-    flex: 3,
+    flex: 2,
     backgroundColor: AppStyles.primaryColor,
     alignItems: "center",
     justifyContent: "center"
   },
   bodyContainer: {
-    flex: 4,
+    flex: 3,
     backgroundColor: "#F8F8F8",
     padding: 30,
     alignItems: "center"

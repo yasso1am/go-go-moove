@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Alert } from 'react-native'
 import { BASE_URL } from 'react-native-dotenv'
-// ApiClient.init(BASE_URL)
 
 const LOGIN = 'LOGIN'
 const LOGOUT = 'LOGOUT'
@@ -31,10 +30,9 @@ export const loginFacebook = (fb_access_token, navigation) => { d
   }
 }
 
-export const register = (name, email, password, passwordConfirm, dob, country, stateAbv, city, line1, line2, zip, navigation) => {
-  debugger
+export const register = (firstName, lastName, email, password, passwordConfirm, formattedDob, address, navigation) => {
   return (dispatch) => {
-    axios.post(`${BASE_URL}/register`, {name: name, email: email, password: password, password_confirmation: passwordConfirm, dob: dob, country: country, state: stateAbv, city: city, line_1: line1, line2: line2, zip: zip} )
+    axios.post(`${BASE_URL}/register`, {first_name: firstName, last_name: lastName, email: email, password: password, password_confirmation: passwordConfirm, dob: formattedDob, address: address} )
       .then( async (res) => {
         let user = res.data.user
         let token = res.data.token
@@ -46,7 +44,7 @@ export const register = (name, email, password, passwordConfirm, dob, country, s
       })
       .catch( error => {
         console.log({error})
-        Alert.alert(`Error registering user: ${error.response.data[0]}`)
+        Alert.alert(`Error registering user: ${error.response.data.message}`)
       })
   }
 }
@@ -100,7 +98,6 @@ export const getProfile = () => {
 }
 
 export const logout = (navigation) => {
-  debugger
   return ( dispatch ) => {
     axios.post(`${BASE_URL}/v1/logout`)
     .then( res => {

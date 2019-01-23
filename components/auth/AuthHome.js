@@ -28,13 +28,18 @@ import { register, login } from '../../reducers/user'
 
 const { width } = Dimensions.get('window')
 
-const Header = () => (
+const Header = (props) => (
   <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row'}}>
     <View style={{flexDirection: 'row', flex: 2, alignItems: 'center', justifyContent: 'center'}}>
       <Text style={{textAlign: "center"}}>Must be 18+ to use this app</Text>
     </View>
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <TouchableOpacity onPress={() => QuickPicker.close()} adjustsFontSizeToFit hitSlop={{top: 50, bottom: 50, left: 50, right: 50}}>
+      <TouchableOpacity 
+        onPress={() => {
+          QuickPicker.close()
+          props.emailRef.focus()
+        }} 
+        adjustsFontSizeToFit hitSlop={{top: 50, bottom: 50, left: 50, right: 50}}>
         <Text style={{color: AppStyles.primaryColor, fontWeight: 'bold', fontSize: 16}}> DONE </Text>
       </TouchableOpacity>
     </View>
@@ -49,7 +54,7 @@ class AuthHome extends React.Component {
     email: "",
     password: "",
     passwordConfirm: "",
-    dob: 'Date of Birth',
+    dob: '',
     address: '',
   }
 
@@ -64,9 +69,6 @@ class AuthHome extends React.Component {
       const {
         type,
         token,
-        expires,
-        permissions,
-        declinedPermissions
       } = await Facebook.logInWithReadPermissionsAsync(facebookAppId, {
         permissions: ["public_profile", "email"],
         behavior: "web"
@@ -98,7 +100,7 @@ class AuthHome extends React.Component {
     } = this.state
     const { dispatch, navigation } = this.props
     if (active === 'Sign Up'){
-      if (!passwordConfirm || !password || !email || !firstName || !lastName || !dob || address){
+      if (!passwordConfirm || !password || !email || !firstName || !lastName || !dob || !address){
         Alert.alert("Please complete all required fields")
         return
       } 
@@ -106,8 +108,8 @@ class AuthHome extends React.Component {
         Alert.alert("Passwords must match")
         return
       } else {
-        let formattedDate = moment(dob).format('YYYY-MM-DD')
-        dispatch(register(name, email, password, passwordConfirm, formattedDate, address))
+        let formattedDob = moment(dob).format('YYYY-MM-DD')
+        dispatch(register(firstName, lastName, email, password, passwordConfirm, formattedDob, address, navigation))
         this.setState({ email: '', password: '', passwordConfirm: '', name: '', address: ''})
         return
       }
@@ -127,14 +129,14 @@ class AuthHome extends React.Component {
         pickerType: 'date',
         mode: 'date',
         selectedValue: date,
-        topRow: <Header />,
+        topRow: <Header emailRef={this.email} />,
         onValueChange: (dob) => this.setState({dob}),
         useNativeDriver: true,
         onTapOut: QuickPicker.close()
       })
   }
 
-  render() {
+  render(){
     const { active } = this.state;
     return (
       <Fragment>
@@ -203,9 +205,7 @@ class AuthHome extends React.Component {
                       value={this.state.firstName}
                       textContentType={"name"}
                       returnKeyType="next"
-                      onSubmitEditing={() => {
-                        this.email.focus();
-                      }}
+                      onSubmitEditing={() => { this.lastName.focus() }}
                       onChangeText={firstName => this.setState({ firstName })}
                       underlineColorAndroid="transparent"
                     />
@@ -220,58 +220,35 @@ class AuthHome extends React.Component {
                         value={this.state.lastName}
                         textContentType={"name"}
                         returnKeyType="next"
-                        onSubmitEditing={() => {
-                          this.email.focus();
-                        }}
+                        ref={ input => { this.lastName = input }}
+                        onSubmitEditing={() => { this.address.focus() }}
                         onChangeText={lastName => this.setState({ lastName })}
                         underlineColorAndroid="transparent"
                       />
                   </View>
 
                     <GooglePlacesAutocomplete
-                        styles={{
-                          textInputContainer: {
-                            backgroundColor: 'white', 
-                            borderWidth: 0.5, 
-                            borderColor: '#707070', 
-                            borderRadius: 5,
-                            paddingRight: '15%',
-                            height: 50,
-                            opacity: 1,
-                            marginTop: 15,
-                            zIndex: 1,
-                            borderTopWidth: 1,
-                            borderBottomWidth: 1,
-                          },
-                          textInput: {
-                            zIndex: 0,
-                            fontFamily: 'System',
-                            height: '70%',
-                            paddingVertical: 1,
-                            margin: 0,
-                          },
-                          container: {
-                          },
-                        
-                          }}
-                        minLength={2}
-                        placeholder={null}
-                        returnKeyType={'search'} 
-                        listViewDisplayed={true} 
-                        fetchDetails={true}
-                        onPress={(data, details) => { 
-                          this.setState({address: data.description})
-                        }}
-                        nearbyPlacesAPI='GooglePlacesSearch'
-                        GooglePlacesSearchQuery={{ rankby: 'distance'}}        
-                        debounce={200} 
-                        query={{
-                          key: 'AIzaSyA9tAhBdeDbhjDDcBWKHxTMxYtVPU4df_w',
-                          language: 'en', 
-                        }}
-                      >
-                        <Text style={[styles.labelText, {paddingTop: '10.5%'}]}> Address </Text>
-                      </GooglePlacesAutocomplete>
+                      styles={{textInputContainer: styles.googleInputContainer, textInput: styles.googleInput}}
+                      query={{
+                        key: GOOGLE_PLACES_API_KEY,
+                        language: 'en', 
+                      }}
+                      GooglePlacesSearchQuery={{ rankby: 'distance'}}        
+                      debounce={200} 
+                      nearbyPlacesAPI='GooglePlacesSearch'
+                      placeholder={null}
+                      returnKeyType={'search'} 
+                      minLength={2}
+                      listViewDisplayed={false} 
+                      fetchDetails={false}
+                      textInputProps={{ ref: textInput => this.address = textInput}}
+                      onPress={(data) => { 
+                        this.setState({address: data.description})
+                        this.pickDate()
+                      }}
+                    >
+                      <Text style={[styles.labelText, {paddingTop: '10.5%'}]}> Address </Text>
+                    </GooglePlacesAutocomplete>
 
                     <View style={styles.lineItem}>
                       <TouchableOpacity 
@@ -291,31 +268,24 @@ class AuthHome extends React.Component {
                   <Text style={styles.labelText}> Email </Text>
                   <TextInput
                     style={styles.textInput}
-                    ref={input => {
-                      this.email = input;
-                    }}
+                    ref={input => {this.email = input;}}
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="email-address"
                     returnKeyType="next"
                     textContentType={"emailAddress"}
                     value={this.state.email}
-                    onSubmitEditing={() => {
-                      this.password.focus();
-                    }}
+                    onSubmitEditing={() => this.password.focus() }
                     onChangeText={email => this.setState({ email })}
                     underlineColorAndroid="transparent"
                   />
-
                 </View>
 
                 <View style={styles.lineItem}>
                   <Text style={styles.labelText}> Password </Text>
                   <TextInput
                     style={styles.textInput}
-                    ref={input => {
-                      this.password = input;
-                    }}
+                    ref={input => { this.password = input }}
                     autoCapitalize="none"
                     value={this.state.password}
                     autoCorrect={false}
@@ -457,7 +427,7 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 3,
-  },
+  },       
   lineItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -483,6 +453,26 @@ const styles = StyleSheet.create({
     fontSize: 10,
     right: width * 0.03,
     opacity: 0.8
+  },
+  googleInputContainer: {
+    backgroundColor: 'white', 
+    borderWidth: 0.5, 
+    borderColor: '#707070', 
+    borderRadius: 5,
+    paddingRight: '15%',
+    height: 50,
+    opacity: 1,
+    marginTop: 15,
+    zIndex: 1,
+    borderTopWidth: 1,
+    borderBottomWidth: 1,
+  },
+  googleInput: {
+    zIndex: 0,
+    fontFamily: 'System',
+    height: '70%',
+    paddingVertical: 1,
+    margin: 0,
   },
   button: {
     flex: 1,
