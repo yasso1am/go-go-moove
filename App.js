@@ -11,6 +11,7 @@ import ForgotPassword from './components/auth/ForgotPassword'
 import AddressSearch from './components/utils/AddressSearch'
 
 import Profile from './components/profile/Profile'
+import StartBooking from './components/booking/StartBooking'
 
 const AuthStack = createStackNavigator(
   {
@@ -27,10 +28,11 @@ const AuthStack = createStackNavigator(
 
 const MainStack = createStackNavigator(
   {
-    Profile: {screen: Profile}
+    Profile: {screen: Profile},
+    StartBooking: {screen: StartBooking}
   },
   {
-    initialRouteName: 'Profile',
+    initialRouteName: 'StartBooking',
     navigationOptions: {
       headerBackTitleStyle: {color: '#F1552D', fontSize: 11},
       headerTintColor: '#F1552D',
